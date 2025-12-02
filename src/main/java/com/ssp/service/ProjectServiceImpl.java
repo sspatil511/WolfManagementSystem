@@ -2,19 +2,46 @@ package com.ssp.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssp.model.Chat;
 import com.ssp.model.Project;
 import com.ssp.model.User;
+import com.ssp.repository.ProjectRepository;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ChatService chatService;
+
     @Override
     public Project createProject(Project project, User user) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createProject'");
+        
+        Project createdProject = new Project();
+        createdProject.setOwner(user);
+        createdProject.setTags(project.getTags());
+        createdProject.setName(project.getName());
+        createdProject.setDescription(project.getDescription());
+        createdProject.setCategory(project.getCategory());
+        createdProject.getTeam().add(user);
+
+        Project savedProject = projectRepository.save(createdProject);
+        
+        Chat chat = new Chat();
+        chat.setProject(savedProject); 
+        
+        Chat projectChat = chatService.createChat(chat);
+
+        return savedProject;
+        
     }
 
     @Override
