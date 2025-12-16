@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssp.model.Chat;
+import com.ssp.model.Invitation;
 import com.ssp.model.Project;
 import com.ssp.model.User;
+import com.ssp.repository.InviteRequest;
 import com.ssp.response.MessageResponse;
+import com.ssp.service.InvitationService;
 import com.ssp.service.ProjectService;
 import com.ssp.service.UserService;
 
@@ -34,6 +37,8 @@ public class ProjectController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private InvitationService invitationService;
 
     @GetMapping
     public ResponseEntity<List<Project>> getProjects(
@@ -126,5 +131,32 @@ public class ProjectController {
         Chat chat = projectService.getChatByProjectId(projectId);
 
         return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<MessageResponse> inviteProject(
+        @RequestBody InviteRequest req,
+        @RequestHeader("Authorization") String jwt
+    ) throws Exception{
+        
+        //User user = userService.findUserProfileByJwt(jwt);
+        invitationService.sendInvitation(req.getEmail(), req.getProjectId());
+        MessageResponse res = new MessageResponse("User invited successfully");
+         
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("/accept_invitation")
+    public ResponseEntity<Invitation> acceptInviteProject(
+        @RequestParam String token,
+        @RequestHeader("Authorization") String jwt
+    ) throws Exception{
+        
+        User user = userService.findUserProfileByJwt(jwt);
+        Invitation invitation = invitationService.acceptInvitation(token, user.getId());
+        projectService.addUserToProject(invitation.getProjectId(), user.getId());
+
+         
+        return new ResponseEntity<>(invitation, HttpStatus.ACCEPTED);
     }
 }
