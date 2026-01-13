@@ -20,6 +20,7 @@ import com.ssp.request.LoginRequest;
 import com.ssp.repository.UserRepository;
 import com.ssp.response.AuthResponse;
 import com.ssp.service.CustomUserDetailsImpl;
+import com.ssp.service.SubscriptionService;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,6 +34,9 @@ public class AuthController {
 
     @Autowired
     private CustomUserDetailsImpl customUserDetailsImpl;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
@@ -49,6 +53,8 @@ public class AuthController {
         createdUser.setFullName(user.getFullName());
 
         User savedUser = userRepository.save(createdUser);
+
+        subscriptionService.createSubscription(savedUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
