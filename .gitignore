@@ -1,5 +1,7 @@
 .DS_Store
+**/.DS_Store
 .vscode/
 target/
 .env
 application.env
+src/main/java/com/ssp/config/EnvironmentDebugger.java
