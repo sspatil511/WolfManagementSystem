@@ -1,0 +1,705 @@
+{
+	"info": {
+		"name": "Wolf Management System API",
+		"description": "Complete API collection for the Wolf Management System Spring Boot application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5454"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"description": "Authentication endpoints (public — no JWT required).",
+			"item": [
+				{
+					"name": "Sign Up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.jwt) {",
+									"        pm.environment.set('jwt_token', jsonData.jwt);",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signup",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "signup"]
+						},
+						"description": "Register a new user. The response includes a JWT token that is automatically saved to the environment."
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.jwt) {",
+									"        pm.environment.set('jwt_token', jsonData.jwt);",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signin",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "signin"]
+						},
+						"description": "Log in with existing credentials. The response includes a JWT token that is automatically saved to the environment."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"description": "Project management endpoints (JWT required).",
+			"item": [
+				{
+					"name": "Create Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.id) {",
+									"        pm.environment.set('project_id', jsonData.id);",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My First Project\",\n    \"description\": \"A sample project for testing\",\n    \"category\": \"fullstack\",\n    \"tags\": [\"java\", \"spring boot\", \"react\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/projects",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects"]
+						},
+						"description": "Create a new project. The project ID is automatically saved to the environment."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Projects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/projects?category=fullstack&tag=java",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects"],
+							"query": [
+								{
+									"key": "category",
+									"value": "fullstack",
+									"description": "Optional filter by category"
+								},
+								{
+									"key": "tag",
+									"value": "java",
+									"description": "Optional filter by tag"
+								}
+							]
+						},
+						"description": "Get all projects for the authenticated user. Optionally filter by category and/or tag."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/projects/{{project_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "{{project_id}}"]
+						},
+						"description": "Get a specific project by its ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Project Name\",\n    \"description\": \"Updated description\",\n    \"tags\": [\"java\", \"spring boot\", \"angular\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/projects/{{project_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "{{project_id}}"]
+						},
+						"description": "Update an existing project. Send only the fields you want to change."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Projects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/projects/search?keyword=sample",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "search"],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "sample",
+									"description": "Search keyword"
+								}
+							]
+						},
+						"description": "Search projects by keyword."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Chat",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/projects/{{project_id}}/chat",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "{{project_id}}", "chat"]
+						},
+						"description": "Get the chat room associated with a project."
+					},
+					"response": []
+				},
+				{
+					"name": "Invite User to Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"teammate@example.com\",\n    \"projectId\": {{project_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/projects/invite",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "invite"]
+						},
+						"description": "Send a project invitation to a user by email."
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Project Invitation",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/projects/accept_invitation?token={{invitation_token}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "accept_invitation"],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{invitation_token}}",
+									"description": "Invitation token received via email"
+								}
+							]
+						},
+						"description": "Accept a project invitation using the token received via email."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/projects/{{project_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "projects", "{{project_id}}"]
+						},
+						"description": "Delete a project by its ID. Only the project owner can delete."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Issues",
+			"description": "Issue tracking endpoints (JWT required).",
+			"item": [
+				{
+					"name": "Create Issue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.id) {",
+									"        pm.environment.set('issue_id', jsonData.id);",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Fix login bug\",\n    \"description\": \"Users cannot log in with special characters in password\",\n    \"status\": \"Open\",\n    \"projectId\": {{project_id}},\n    \"priority\": \"High\",\n    \"dueDate\": \"2026-03-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/issues",
+							"host": ["{{base_url}}"],
+							"path": ["api", "issues"]
+						},
+						"description": "Create a new issue in a project. The issue ID is automatically saved to the environment."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Issue by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/issues/{{issue_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "issues", "{{issue_id}}"]
+						},
+						"description": "Get a specific issue by its ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Issues by Project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/issues/project/{{project_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "issues", "project", "{{project_id}}"]
+						},
+						"description": "Get all issues for a specific project."
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Issue to User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/issues/{{issue_id}}/assignee/{{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "issues", "{{issue_id}}", "assignee", "{{user_id}}"]
+						},
+						"description": "Assign an issue to a specific user by user ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Issue Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/issues/{{issue_id}}/status/In Progress",
+							"host": ["{{base_url}}"],
+							"path": ["api", "issues", "{{issue_id}}", "status", "In Progress"]
+						},
+						"description": "Update the status of an issue. Common values: Open, In Progress, Closed."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Issue",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/issues/{{issue_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "issues", "{{issue_id}}"]
+						},
+						"description": "Delete an issue by its ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"description": "Comment endpoints for issues (JWT required for create/delete).",
+			"item": [
+				{
+					"name": "Create Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.id) {",
+									"        pm.environment.set('comment_id', jsonData.id);",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"issueId\": {{issue_id}},\n    \"content\": \"This bug needs to be fixed ASAP.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/comments",
+							"host": ["{{base_url}}"],
+							"path": ["api", "comments"]
+						},
+						"description": "Add a comment to an issue. The comment ID is automatically saved to the environment."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments by Issue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/comments/{{issue_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "comments", "{{issue_id}}"]
+						},
+						"description": "Get all comments for a specific issue."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/comments/{{comment_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "comments", "{{comment_id}}"]
+						},
+						"description": "Delete a comment by its ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"description": "Project chat message endpoints.",
+			"item": [
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"senderId\": {{user_id}},\n    \"content\": \"Hello team, let's start working on this project!\",\n    \"projectId\": {{project_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/messages/send",
+							"host": ["{{base_url}}"],
+							"path": ["api", "messages", "send"]
+						},
+						"description": "Send a message to a project's chat room."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Messages by Project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/messages/chat/{{project_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "messages", "chat", "{{project_id}}"]
+						},
+						"description": "Get all messages in a project's chat room."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscriptions",
+			"description": "User subscription management endpoints (JWT required).",
+			"item": [
+				{
+					"name": "Get User Subscription",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/subscriptions/user",
+							"host": ["{{base_url}}"],
+							"path": ["api", "subscriptions", "user"]
+						},
+						"description": "Get the subscription details for the authenticated user."
+					},
+					"response": []
+				},
+				{
+					"name": "Upgrade Subscription",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/subscriptions/upgrade?planType=MONTHLY",
+							"host": ["{{base_url}}"],
+							"path": ["api", "subscriptions", "upgrade"],
+							"query": [
+								{
+									"key": "planType",
+									"value": "MONTHLY",
+									"description": "Plan type: FREE, MONTHLY, or ANNUALLY"
+								}
+							]
+						},
+						"description": "Upgrade the authenticated user's subscription. Valid plan types: FREE, MONTHLY, ANNUALLY."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"description": "Payment processing endpoints (requires Stripe configuration).",
+			"item": [
+				{
+					"name": "Create Payment Link",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/payments/create-payment-link",
+							"host": ["{{base_url}}"],
+							"path": ["api", "payments", "create-payment-link"]
+						},
+						"description": "Create a Stripe payment link for subscription upgrade. Requires Stripe API keys to be configured as environment variables."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
