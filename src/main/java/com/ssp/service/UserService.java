@@ -10,7 +10,7 @@ public interface UserService {
 
     User findUserById(Long id) throws Exception;
 
-    User updateUsersProjectSize(User user, int number) throws Exception;
+    User updateUsersNumProjects(User user, int number) throws Exception;
 
     
 }

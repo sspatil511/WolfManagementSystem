@@ -5,3 +5,6 @@ target/
 .env
 application.env
 src/main/java/com/ssp/config/EnvironmentDebugger.java
+postman/environments/
+postman/globals/
+.postman/

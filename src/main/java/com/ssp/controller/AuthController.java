@@ -51,6 +51,7 @@ public class AuthController {
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
         createdUser.setEmail(user.getEmail());
         createdUser.setFullName(user.getFullName());
+        createdUser.setNumProjects(0); // Initialize number of projects to 0
 
         User savedUser = userRepository.save(createdUser);
 
