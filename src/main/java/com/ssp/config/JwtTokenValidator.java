@@ -28,7 +28,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
             throws ServletException, IOException {
         // Implement JWT validation logic here
         // For example, extract the token from the request header and validate it
-        String jwt = request.getHeader("JwtConstant.JWT_HEADER");
+        String jwt = request.getHeader(JwtConstant.JWT_HEADER);
 
         if(jwt != null) {
             

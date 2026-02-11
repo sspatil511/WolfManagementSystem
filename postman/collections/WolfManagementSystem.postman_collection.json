@@ -66,6 +66,18 @@
             "description": "Sign in with existing credentials. Returns a JWT token."
           },
           "response": []
+        },
+        {
+          "name": "GET / api/users/profile",
+          "id": "22465443-fc64-43aa-a16f-a7e36fcf1f4f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
         }
       ],
       "id": "f2079f2c-a21a-4c52-8929-de60689f3ff2",
