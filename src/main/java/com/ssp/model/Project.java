@@ -33,7 +33,9 @@ public class Project {
     private String name;
     private String description;
     private String category;
-
+    
+    // Total number of members working on the project (owner + team members)
+    private Integer projectSize = 1; // Default value includes the owner
     
     private List<String> tags = new ArrayList<>();
 

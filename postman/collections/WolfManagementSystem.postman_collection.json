@@ -396,6 +396,18 @@
             "description": "Accept a project invitation using the invitation token."
           },
           "response": []
+        },
+        {
+          "name": "GET /api/projects",
+          "id": "8576a52a-9fd6-4883-b7fb-02a2dfa2a183",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
         }
       ],
       "id": "dd12876b-05c2-41b8-afa6-acf2daf68b4a",
