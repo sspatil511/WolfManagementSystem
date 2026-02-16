@@ -32,6 +32,7 @@ public class User {
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
     private List<Issue> assignedIssues = new ArrayList<>();
     
-    private int numProjects;
+    // Total number of projects user is working on (owns + invited to)
+    private int numProjects = 0; // Default value is 0
     
 }

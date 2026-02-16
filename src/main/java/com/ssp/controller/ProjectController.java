@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,8 +28,12 @@ import com.ssp.service.InvitationService;
 import com.ssp.service.ProjectService;
 import com.ssp.service.UserService;
 
+import jakarta.validation.Valid;
+
+
 @RestController
 @RequestMapping("/api/projects")
+@Validated
 
 public class ProjectController {
 
@@ -135,17 +141,25 @@ public class ProjectController {
 
     @PostMapping("/invite")
     public ResponseEntity<MessageResponse> inviteProject(
-        @RequestBody InviteRequest req,
+        @Valid @RequestBody InviteRequest req,
         @RequestHeader("Authorization") String jwt
     ) throws Exception{
         
-        //User user = userService.findUserProfileByJwt(jwt);
-        invitationService.sendInvitation(req.getEmail(), req.getProjectId());
+        User user = userService.findUserProfileByJwt(jwt);
+        Project project = projectService.getProjectById(req.getProjectId());
+        
+        // Check if user is project owner
+        if (!project.getOwner().getId().equals(user.getId())) {
+            throw new Exception("Only project owner can send invitations");
+        }
+        
+        invitationService.sendInvitation(req.getEmail().trim().toLowerCase(), req.getProjectId());
         MessageResponse res = new MessageResponse("User invited successfully");
-         
+        
         return new ResponseEntity<>(res, HttpStatus.OK);
+            
     }
-
+    
     @GetMapping("/accept_invitation")
     public ResponseEntity<Invitation> acceptInviteProject(
         @RequestParam String token,

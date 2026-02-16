@@ -84,15 +84,21 @@ public class IssueController {
     }
 
     @PutMapping("/{issueId}/assignee/{userId}")
-    public ResponseEntity<Issue> addUserToIssue(@PathVariable Long issueId, @PathVariable Long userId) throws Exception {
+    public ResponseEntity<Issue> addUserToIssue(@PathVariable Long issueId, 
+                                              @PathVariable Long userId,
+                                              @RequestHeader("Authorization") String token) throws Exception {
 
+        // Token validation is handled by JwtTokenValidator filter
         Issue issue = issueService.addUserToIssue(issueId, userId);
         return ResponseEntity.ok(issue);
     }
 
     @PutMapping("/{issueId}/status/{status}")
-    public ResponseEntity<Issue> updateIssueStatus(@PathVariable String status, @PathVariable Long issueId) throws Exception {
+    public ResponseEntity<Issue> updateIssueStatus(@PathVariable String status, 
+                                                 @PathVariable Long issueId,
+                                                 @RequestHeader("Authorization") String token) throws Exception {
 
+        // Token validation is handled by JwtTokenValidator filter
         Issue issue = issueService.updateStatus(issueId, status);
         return ResponseEntity.ok(issue);
 

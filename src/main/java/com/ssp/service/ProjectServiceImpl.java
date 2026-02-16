@@ -11,6 +11,7 @@ import com.ssp.model.Chat;
 import com.ssp.model.Project;
 import com.ssp.model.User;
 import com.ssp.repository.ProjectRepository;
+import com.ssp.repository.UserRepository;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -24,6 +25,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public Project createProject(Project project, User user) throws Exception {
         
@@ -34,8 +38,12 @@ public class ProjectServiceImpl implements ProjectService {
         createdProject.setDescription(project.getDescription());
         createdProject.setCategory(project.getCategory());
         createdProject.getTeam().add(user);
+        createdProject.setProjectSize(1); // Owner is the first member
 
         Project savedProject = projectRepository.save(createdProject);
+        
+        // Increment owner's project count
+        userService.updateUsersNumProjects(user, 1);
         
         Chat chat = new Chat();
         chat.setProject(savedProject); 
@@ -87,7 +95,16 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(Long projectId, Long userId) throws Exception {
        
-        getProjectById(projectId);
+        Project project = projectRepository.findById(projectId)
+                            .orElseThrow(() -> new Exception("Project not found with id: " + projectId));
+
+        if(!project.getOwner().getId().equals(userId)){
+            throw new Exception("Access denied. Only the project owner can delete the project.");
+        }
+        
+        User owner = project.getOwner();
+        owner.setNumProjects(owner.getNumProjects() - 1); // Decrement owner's project count
+        userRepository.save(owner);
         
         projectRepository.deleteById(projectId);
 
@@ -116,6 +133,10 @@ public class ProjectServiceImpl implements ProjectService {
 
             project.getChat().getUsers().add(user);
             project.getTeam().add(user);
+            project.setProjectSize(project.getProjectSize() + 1); // Increment project size
+            
+            // Increment user's project count
+            userService.updateUsersNumProjects(user, 1);
         }
 
         projectRepository.save(project);
@@ -132,6 +153,10 @@ public class ProjectServiceImpl implements ProjectService {
 
             project.getChat().getUsers().remove(user);
             project.getTeam().remove(user);
+            project.setProjectSize(project.getProjectSize() - 1); // Decrement project size
+            
+            // Decrement user's project count
+            userService.updateUsersNumProjects(user, -1);
         }
 
         projectRepository.save(project);
