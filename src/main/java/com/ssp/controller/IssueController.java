@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,12 @@ import com.ssp.response.MessageResponse;
 import com.ssp.service.IssueService;
 import com.ssp.service.UserService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 @RestController
+@Validated
 @RequestMapping("/api/issues")
 public class IssueController {
 
@@ -33,19 +39,21 @@ public class IssueController {
     private UserService userService;
 
     @GetMapping("/{issueId}")
-    public ResponseEntity<Issue> getIssueById(@PathVariable Long issueId) throws Exception {
+    public ResponseEntity<Issue> getIssueById(@Positive(message = "Issue ID must be positive") 
+                                                @PathVariable Long issueId) throws Exception {
 
         return ResponseEntity.ok(issueService.getIssueById(issueId));
     }
 
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Issue>> getIssueByProjectId(@PathVariable Long projectId) throws Exception {
+    public ResponseEntity<List<Issue>> getIssueByProjectId(@Positive(message = "Project ID must be positive") 
+                                                           @PathVariable Long projectId) throws Exception {
 
         return ResponseEntity.ok(issueService.getIssuedByProjectId(projectId));
     }
 
     @PostMapping
-    public ResponseEntity<IssueDTO> createIssue(@RequestBody IssueRequest issue, 
+    public ResponseEntity<IssueDTO> createIssue(@Valid @RequestBody IssueRequest issue, 
                                                 @RequestHeader("Authorization") String token) throws Exception {
 
         //System.out.println("issue-----" + issue);
@@ -70,7 +78,7 @@ public class IssueController {
     }
 
     @DeleteMapping("/{issueId}")
-    public ResponseEntity<MessageResponse> deleteIssue(@PathVariable Long issueId,
+    public ResponseEntity<MessageResponse> deleteIssue(@Positive(message = "Invalid issue ID") @PathVariable Long issueId,
                                                     @RequestHeader("Authorization") String token) throws Exception {
 
         
@@ -84,8 +92,8 @@ public class IssueController {
     }
 
     @PutMapping("/{issueId}/assignee/{userId}")
-    public ResponseEntity<Issue> addUserToIssue(@PathVariable Long issueId, 
-                                              @PathVariable Long userId,
+    public ResponseEntity<Issue> addUserToIssue(@Positive(message = "Invalid issue ID") @PathVariable Long issueId, 
+                                              @Positive(message = "Invalid user ID") @PathVariable Long userId,
                                               @RequestHeader("Authorization") String token) throws Exception {
 
         // Token validation is handled by JwtTokenValidator filter
@@ -94,9 +102,9 @@ public class IssueController {
     }
 
     @PutMapping("/{issueId}/status/{status}")
-    public ResponseEntity<Issue> updateIssueStatus(@PathVariable String status, 
-                                                 @PathVariable Long issueId,
-                                                 @RequestHeader("Authorization") String token) throws Exception {
+    public ResponseEntity<Issue> updateIssueStatus(@NotBlank(message = "Status is required") @PathVariable String status, 
+                                                    @Positive(message = "Invalid issue ID") @PathVariable Long issueId,
+                                                    @RequestHeader("Authorization") String token) throws Exception {
 
         // Token validation is handled by JwtTokenValidator filter
         Issue issue = issueService.updateStatus(issueId, status);
