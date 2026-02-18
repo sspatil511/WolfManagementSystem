@@ -877,18 +877,18 @@
   ],
   "variable": [
     {
-      "id": "ae6456de-df90-4a52-bef5-dfeafb6a1d41",
+      "id": "bc86d7f1-05e2-4b02-b451-713611f7d53b",
       "key": "baseUrl",
       "value": "http://localhost:8080"
     },
     {
-      "id": "5ed6748e-27d5-4b96-81dc-c36c0a852d78",
-      "key": "token_2",
+      "id": "18603d1c-bff7-47a4-a757-2a909da61194",
+      "key": "token_1",
       "value": ""
     },
     {
-      "id": "e1e26935-9427-42a4-b660-db9696a7ca91",
-      "key": "token_1",
+      "id": "b430815c-f245-4765-a692-eaf7807b40b3",
+      "key": "token_2",
       "value": "",
       "type": "default"
     }

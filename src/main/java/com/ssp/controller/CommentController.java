@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,11 @@ import com.ssp.response.MessageResponse;
 import com.ssp.service.CommentService;
 import com.ssp.service.UserService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+
 @RestController
+@Validated
 @RequestMapping("/api/comments")
 public class CommentController {
 
@@ -32,7 +37,7 @@ public class CommentController {
     private UserService userService;
 
     @PostMapping()
-    public ResponseEntity<Comment> createComment(@RequestBody CreateCommentRequest req,
+    public ResponseEntity<Comment> createComment(@Valid @RequestBody CreateCommentRequest req,
                                                  @RequestHeader("Authorization") String jwt) throws Exception 
     {
 
@@ -43,7 +48,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<MessageResponse> deleteComment(@PathVariable Long commentId, 
+    public ResponseEntity<MessageResponse> deleteComment(@Positive (message = "Comment ID must be a positive number") @PathVariable Long commentId, 
                                                          @RequestHeader("Authorization") String jwt) throws Exception 
     {
 
@@ -54,8 +59,11 @@ public class CommentController {
     }
 
     @GetMapping("/{issueId}")
-    public ResponseEntity<List<Comment>> getCommentsByIssueId(@PathVariable Long issueId){
-
+    public ResponseEntity<List<Comment>> getCommentsByIssueId(@Positive (message = "Issue ID must be a positive number") @PathVariable Long issueId,
+                                                                @RequestHeader ("Authorization") String jwt) throws Exception{
+        
+        
+        User user = userService.findUserProfileByJwt(jwt);
         List<Comment> comments = commentService.findCommentByIssueId(issueId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }

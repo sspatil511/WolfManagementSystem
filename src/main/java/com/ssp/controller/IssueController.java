@@ -61,18 +61,8 @@ public class IssueController {
         User tokenUser = userService.findUserProfileByJwt(token);
         
         Issue createdIssue = issueService.createIssue(issue, tokenUser);
-        IssueDTO issueDTO = new IssueDTO();
-        issueDTO.setDescription(createdIssue.getDescription());
-        issueDTO.setDueDate(createdIssue.getDueDate());
-        issueDTO.setId(createdIssue.getId());
-        issueDTO.setPriority(createdIssue.getPriority());
-        issueDTO.setProject(createdIssue.getProject());
-        issueDTO.setProjectID(createdIssue.getProjectID());
-        issueDTO.setStatus(createdIssue.getStatus());
-        issueDTO.setTitle(createdIssue.getTitle());
-        issueDTO.setTags(createdIssue.getTags());
-        issueDTO.setAssignee(createdIssue.getAssignee());
-
+        IssueDTO issueDTO = new IssueDTO(createdIssue);
+        
         return ResponseEntity.ok(issueDTO);
         
     }
