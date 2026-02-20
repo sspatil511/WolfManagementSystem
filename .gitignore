@@ -8,3 +8,11 @@ src/main/java/com/ssp/config/EnvironmentDebugger.java
 postman/environments/
 postman/globals/
 .postman/
+
+react/WolfManagementSystem-react/node_modules/
+react/WolfManagementSystem-react/dist/
+react/WolfManagementSystem-react/npm-debug.log*
+react/WolfManagementSystem-react/yarn-debug.log*
+react/WolfManagementSystem-react/yarn-error.log*
+react/.DS_Store
+react/**/.DS_Store
