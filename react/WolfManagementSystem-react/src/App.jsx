@@ -7,8 +7,9 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    
-    <Button variant="default" size="default">Click me</Button>
+    <main className="min-h-screen flex items-center justify-center">
+      <Button variant="default" size="default">Click me</Button>
+    </main>
   )
 }
 
