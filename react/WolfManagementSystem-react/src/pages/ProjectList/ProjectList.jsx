@@ -6,6 +6,14 @@ import { Separator } from '@/components/ui/separator'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
+import { Sheet, 
+    SheetTrigger, 
+    SheetContent,  
+    SheetHeader, 
+    SheetTitle} 
+from '@/components/ui/sheet'
+
+const catgories = ['All', 'Fullstack', 'Frontend', 'Backend']
 
 const tags = ['All', 'React', 'Node.js', 'Python', 'Django', 'Vue.js', 'Angular', 'Flask']
 
@@ -13,7 +21,7 @@ const FilterContent = ({ onFilterChange }) => {
 
     return (
 
-        <ScrollArea className='space-y-7 h-[60vh] lg:h-[70vh]'>
+        <ScrollArea className='space-y-7 h-full max-h-[70vh]'>
             <div>
                 <h1 className='pb-3 text-gray-400'>
                     Category
@@ -22,22 +30,12 @@ const FilterContent = ({ onFilterChange }) => {
                 <RadioGroup className='pt-5' defaultValue='All' onValueChange={(value) =>
                     onFilterChange('category', value)
                 }>
-                    <div className='flex items-center gap-3'>
-                        <RadioGroupItem value='All' id='category-All'/>
-                        <Label htmlFor='category-All'>All</Label>
-                    </div>
-                    <div className='flex items-center gap-3'>
-                        <RadioGroupItem value='Fullstack' id='category-Fullstack'/>
-                        <Label htmlFor='category-Fullstack'>Fullstack</Label>
-                    </div>
-                    <div className='flex items-center gap-3'>
-                        <RadioGroupItem value='Frontend' id='category-Frontend'/>
-                        <Label htmlFor='category-Frontend'>Frontend</Label>
-                    </div>
-                    <div className='flex items-center gap-3'>
-                        <RadioGroupItem value='Backend' id='category-Backend'/>
-                        <Label htmlFor='category-Backend'>Backend</Label>
-                    </div>
+                    {catgories.map((category) => (
+                        <div key={category} className='flex items-center gap-3'>
+                            <RadioGroupItem value={category} id={`category-${category}`}/>
+                            <Label htmlFor={`category-${category}`}>{category}</Label>
+                        </div>
+                    ))}
                 </RadioGroup>
             </div>
             <div className='pt-9'>
@@ -50,8 +48,8 @@ const FilterContent = ({ onFilterChange }) => {
                         onFilterChange('tag', value)
                     } >
                         {tags.map((tag) => <div key={tag} className='flex items-center gap-3'>
-                            <RadioGroupItem value={tag} id={tag}/>
-                            <Label htmlFor={tag}>{tag}</Label>
+                            <RadioGroupItem value={tag} id={`tag-${tag}`}/>
+                            <Label htmlFor={`tag-${tag}`}>{tag}</Label>
                         </div>)}
                     </RadioGroup>
                 </div>
@@ -67,25 +65,28 @@ export const ProjectList = () => {
     }, [])
 
   return (
-    <>
-        <div className='relative px-5 lg:px-0 lg:flex gap-5 justify-center py-5'>
-            <section className='filterSection'>
-                <Card className='p-5 sticky top-10'>
-                    <CardHeader className='flex-row items-center justify-between lg:w-[20rem]'>
-                        <CardTitle>filters</CardTitle>
-                            <Button variant='ghost' size='icon'>
-                                <MixerHorizontalIcon/>
-                            </Button>
-                    </CardHeader>
-                    <CardContent className='mt-5'>
-                        <FilterContent onFilterChange={handleFilterChange}/>
-                    </CardContent>
-                </Card>
-            </section>
-            <section className='projectListSection w-full lg:w-[48rem]'>
-
-            </section>
-        </div>
-    </>
+    
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button variant='ghost' size='icon' className="border-2 border-gray-200 rounded-lg hover:border-gray-400 transition-colors">
+                    <MixerHorizontalIcon className='w-6 h-6'/>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side='left'>
+                <SheetHeader>
+                    <SheetTitle>Filters</SheetTitle>
+                </SheetHeader>
+                <div className='relative px-5 lg:px-0 lg:flex gap-5 justify-center py-5'>
+                    <section className='w-full'>
+                        <Card className='p-5'>
+                            <CardContent className='mt-5'>
+                                <FilterContent onFilterChange={handleFilterChange}/>
+                            </CardContent>
+                        </Card>
+                    </section>
+                </div>
+            </SheetContent>
+        </Sheet>
+    
   )
 }
