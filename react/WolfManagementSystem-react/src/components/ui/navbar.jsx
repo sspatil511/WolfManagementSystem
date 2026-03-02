@@ -54,8 +54,8 @@ export const Navbar = () => {
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant='ghost' className='w-10 h-10 rounded-full p-0 flex items-center justify-center'>
-                                <AvatarIcon className='w-full h-full scale-150'/>
+                            <Button variant='ghost' size='icon' className='rounded-full [&_svg]:size-8'>
+                                <AvatarIcon/>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className='w-48'>
