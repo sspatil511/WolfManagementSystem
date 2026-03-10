@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Filters }  from './filters';
 import { useLocation } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
-import { Field } from '@/components/ui/field';
+import { Sidebar } from './sidebar';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { AvatarIcon } from '@radix-ui/react-icons';
 import { Avatar } from '@/components/ui/avatar';
@@ -23,18 +23,13 @@ export const Navbar = () => {
 
     const pageTitle = routes[location.pathname] || 'Page';
 
-    const [searchQuery, setSearchQuery] = React.useState('');
-
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
-    }
     return (
 
         <nav className='w-full border-b bg-background'>
             <div className='flex items-center justify-between px-6 py-3'>
 
                 <div className='flex items-center gap-3'>
-                    <Filters/>
+                    <Sidebar/>
                     <Avatar className='w-10 h-10 flex items-center justify-center'>
                         <GitHubLogoIcon className='w-8 h-8'/>
                     </Avatar>
@@ -43,15 +38,6 @@ export const Navbar = () => {
                     </Button>
                 </div>
                 <div className='flex items-center gap-2'>
-                    <div className='relative w-64'>
-                        <MagnifyingGlassIcon className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none'/>
-                        <Input
-                            placeholder='Search...'
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            className='pl-9'
-                        />
-                    </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant='ghost' size='icon' className='rounded-full [&_svg]:size-8'>

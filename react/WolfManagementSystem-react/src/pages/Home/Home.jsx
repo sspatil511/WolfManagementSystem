@@ -1,9 +1,10 @@
 import React from 'react'
-import { Navbar } from '../../components/ui/navbar'
+import { ProjectList } from '../ProjectList/ProjectList'
 
 export const Home = () => {
   return (
-    <div>
+    <div className='w-full h-full'>
+      <ProjectList/>
     </div>
   )
 }

@@ -72,7 +72,7 @@ export const Filters = () => {
                     <MixerHorizontalIcon className='w-6 h-6'/>
                 </Button>
             </SheetTrigger>
-            <SheetContent side='left'>
+            <SheetContent side='right'>
                 <SheetHeader>
                     <SheetTitle>Filters</SheetTitle>
                 </SheetHeader>
