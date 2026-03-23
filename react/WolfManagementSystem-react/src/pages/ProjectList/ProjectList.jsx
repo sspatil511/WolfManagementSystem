@@ -3,6 +3,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Filters } from '@/components/ui/filters';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+
 
 const TEMP_PROJECTS = [
   {
@@ -37,12 +39,21 @@ const TagPill = ({ label }) => (
 
 
 export const ProjectList = () => {
-
   const [searchQuery, setSearchQuery] = React.useState('');
 
   const handleSearchChange = (e) => {
-      setSearchQuery(e.target.value);
-  }
+    setSearchQuery(e.target.value);
+  };
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  const filteredProjects = React.useMemo(() => {
+    if (!normalizedQuery) return TEMP_PROJECTS;
+
+    return TEMP_PROJECTS.filter((project) =>
+      project.title.toLowerCase().includes(normalizedQuery)
+    );
+  }, [normalizedQuery]);
 
   return (
     <section className="w-full">
@@ -51,7 +62,7 @@ export const ProjectList = () => {
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
             <p className="text-sm text-muted-foreground">
-              {TEMP_PROJECTS.length} total
+              {filteredProjects.length} total
             </p>
           </div>
 
@@ -59,6 +70,7 @@ export const ProjectList = () => {
             <div className="relative w-full md:w-[320px]">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
+                  type='text'
                   placeholder='Search projects...'
                   value={searchQuery}
                   onChange={handleSearchChange}
@@ -70,8 +82,16 @@ export const ProjectList = () => {
       </div>
     </div>
 
+    {filteredProjects.length === 0 ? (
+          <div className="mt-8 rounded-xl border border-dashed p-8 text-center">
+            <h2 className="text-base font-medium">No matching projects found</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Try a different project title.
+            </p>
+          </div>
+    ) : (  
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {TEMP_PROJECTS.map((project) => (
+          {filteredProjects.map((project) => (
             <Card key={project.id} className="transition-shadow hover:shadow-md">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base leading-6">
@@ -86,13 +106,16 @@ export const ProjectList = () => {
 
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((t) => (
-                    <TagPill key={`${project.id}-${t}`} label={t} />
+                    <Badge key={`${project.id}-${t}`} variant="outline">
+                      {t}
+                    </Badge>
                   ))}
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
+        )}
       </div>
     </section>
   );
