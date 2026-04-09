@@ -1,0 +1,12 @@
+$kind: http-request
+name: DELETE /api/issues/:issueId
+description: Delete an issue.
+url: "{{baseUrl}}/api/issues/:issueId"
+method: DELETE
+headers:
+  Authorization: Bearer {{token}}
+pathVariables:
+  - key: issueId
+    value: "1"
+    description: Issue ID
+order: 4000

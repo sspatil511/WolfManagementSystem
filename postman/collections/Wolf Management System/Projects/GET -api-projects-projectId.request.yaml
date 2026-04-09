@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/projects/:projectId
+description: Get a specific project by ID.
+url: "{{baseUrl}}/api/projects/:projectId"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+pathVariables:
+  - key: projectId
+    value: "1"
+    description: Project ID
+order: 2000

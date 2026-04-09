@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/subscriptions/user
+description: Get the current user's subscription details.
+url: "{{baseUrl}}/api/subscriptions/user"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

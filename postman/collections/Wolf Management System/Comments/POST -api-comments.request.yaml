@@ -1,0 +1,16 @@
+$kind: http-request
+name: POST /api/comments
+description: Create a new comment on an issue.
+url: "{{baseUrl}}/api/comments"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "issueId": 1,
+        "content": "This is a comment on the issue."
+    }
+order: 1000

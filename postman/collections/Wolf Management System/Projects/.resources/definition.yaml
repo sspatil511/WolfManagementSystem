@@ -1,0 +1,4 @@
+$kind: collection
+description: Project management endpoints for CRUD operations, search, chat, and
+  invitations.
+order: 2000

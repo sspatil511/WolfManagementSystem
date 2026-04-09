@@ -1,0 +1,12 @@
+$kind: http-request
+name: DELETE /api/projects/:projectId
+description: Delete a project.
+url: "{{baseUrl}}/api/projects/:projectId"
+method: DELETE
+headers:
+  Authorization: Bearer {{token}}
+pathVariables:
+  - key: projectId
+    value: "1"
+    description: Project ID
+order: 5000

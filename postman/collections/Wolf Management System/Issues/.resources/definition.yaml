@@ -1,0 +1,3 @@
+$kind: collection
+description: Issue tracking endpoints for managing project issues.
+order: 3000

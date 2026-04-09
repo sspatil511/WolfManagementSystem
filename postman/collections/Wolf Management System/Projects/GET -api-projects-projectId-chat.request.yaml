@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/projects/:projectId/chat
+description: Get the chat associated with a project.
+url: "{{baseUrl}}/api/projects/:projectId/chat"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+pathVariables:
+  - key: projectId
+    value: "1"
+    description: Project ID
+order: 7000

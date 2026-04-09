@@ -1,0 +1,12 @@
+$kind: http-request
+name: DELETE /api/comments/:commentId
+description: Delete a comment.
+url: "{{baseUrl}}/api/comments/:commentId"
+method: DELETE
+headers:
+  Authorization: Bearer {{token}}
+pathVariables:
+  - key: commentId
+    value: "1"
+    description: Comment ID
+order: 2000

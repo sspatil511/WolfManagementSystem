@@ -1,0 +1,9 @@
+$kind: collection
+name: Wolf Management System
+description: API collection for the Wolf Management System - a project
+  management application with issues, comments, messages, subscriptions, and
+  payments.
+variables:
+  baseUrl: http://localhost:8080
+  token_1: ""
+  token_2: ""

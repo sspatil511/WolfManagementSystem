@@ -1,0 +1,10 @@
+$kind: http-request
+name: GET /api/issues/:issueId
+description: Get a specific issue by ID.
+url: "{{baseUrl}}/api/issues/:issueId"
+method: GET
+pathVariables:
+  - key: issueId
+    value: "1"
+    description: Issue ID
+order: 1000

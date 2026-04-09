@@ -1,0 +1,6 @@
+$kind: http-request
+name: POST /api/payments/create-payment-link
+description: Create a Stripe payment link for subscription payment.
+url: "{{baseUrl}}/api/payments/create-payment-link"
+method: POST
+order: 1000

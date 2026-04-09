@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/projects/search
+description: Search projects by keyword.
+url: "{{baseUrl}}/api/projects/search?keyword="
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: keyword
+    value: ""
+    description: Search keyword (optional)
+order: 6000

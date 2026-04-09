@@ -1,0 +1,13 @@
+$kind: http-request
+name: PUT /api/issues/:issueId/assignee/:userId
+description: Assign a user to an issue.
+url: "{{baseUrl}}/api/issues/:issueId/assignee/:userId"
+method: PUT
+pathVariables:
+  - key: issueId
+    value: "1"
+    description: Issue ID
+  - key: userId
+    value: "1"
+    description: User ID to assign
+order: 5000

@@ -1,0 +1,16 @@
+$kind: http-request
+name: POST /api/messages/send
+description: Send a message to a project chat.
+url: "{{baseUrl}}/api/messages/send"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "senderId": 1,
+        "projectId": 1,
+        "content": "Hello team!"
+    }
+order: 1000

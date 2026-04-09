@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /auth/signin
+description: Sign in with existing credentials. Returns a JWT token.
+url: "{{baseUrl}}/auth/signin"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "email": "john@example.com",
+        "password": "password123"
+    }
+order: 2000

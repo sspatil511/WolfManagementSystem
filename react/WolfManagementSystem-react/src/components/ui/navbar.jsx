@@ -14,6 +14,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectTrigger, SelectLabel, SelectItem, SelectValue, SelectGroup } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 const PRESET_TAGS = ['Java', 'Python', 'JavaScript', 'TypeScript', 'Docker', 'Kubernetes', 'React', 'Node.js', 'Go', 'Rust', 'PostgreSQL', 'MongoDB'];
 
 
@@ -66,6 +69,15 @@ export const Navbar = () => {
     // Only show tags in the select that haven't been selected yet
     const availablePresetTags = PRESET_TAGS.filter(tag => !selectedTags.includes(tag));
 
+    const { logout } = useAuth();
+    
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+    logout();
+    navigate('/login');
+    };
+
     return (
     
     <>
@@ -109,7 +121,9 @@ export const Navbar = () => {
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem className='text-red-500'>Sign out</DropdownMenuItem>
+                                <DropdownMenuItem className='text-red-500' onSelect={handleLogout}>
+                                    Sign out
+                                </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>

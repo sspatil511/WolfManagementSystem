@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/projects/accept_invitation
+description: Accept a project invitation using the invitation token.
+url: "{{baseUrl}}/api/projects/accept_invitation?token="
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: token
+    value: ""
+    description: Invitation token
+order: 9000

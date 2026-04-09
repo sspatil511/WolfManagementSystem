@@ -1,0 +1,10 @@
+$kind: http-request
+name: GET /api/issues/project/:projectId
+description: Get all issues for a specific project.
+url: "{{baseUrl}}/api/issues/project/:projectId"
+method: GET
+pathVariables:
+  - key: projectId
+    value: "1"
+    description: Project ID
+order: 2000

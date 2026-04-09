@@ -1,0 +1,12 @@
+$kind: http-request
+name: PATCH /api/subscriptions/upgrade
+description: Upgrade the user's subscription plan.
+url: "{{baseUrl}}/api/subscriptions/upgrade?planType=ANNUALLY"
+method: PATCH
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: planType
+    value: ANNUALLY
+    description: Plan type to upgrade to
+order: 2000

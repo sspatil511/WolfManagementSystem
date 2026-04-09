@@ -1,0 +1,13 @@
+$kind: http-request
+name: PUT /api/issues/:issueId/status/:status
+description: Update the status of an issue.
+url: "{{baseUrl}}/api/issues/:issueId/status/:status"
+method: PUT
+pathVariables:
+  - key: issueId
+    value: "1"
+    description: Issue ID
+  - key: status
+    value: In Progress
+    description: New status (Open, In Progress, Closed)
+order: 6000

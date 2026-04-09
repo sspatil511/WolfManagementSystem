@@ -1,0 +1,10 @@
+$kind: http-request
+name: GET /api/messages/chat/:projectId
+description: Get all messages for a project chat.
+url: "{{baseUrl}}/api/messages/chat/:projectId"
+method: GET
+pathVariables:
+  - key: projectId
+    value: "1"
+    description: Project ID
+order: 2000

@@ -1,0 +1,10 @@
+$kind: http-request
+name: GET /api/comments/:issueId
+description: Get all comments for a specific issue.
+url: "{{baseUrl}}/api/comments/:issueId"
+method: GET
+pathVariables:
+  - key: issueId
+    value: "1"
+    description: Issue ID
+order: 3000

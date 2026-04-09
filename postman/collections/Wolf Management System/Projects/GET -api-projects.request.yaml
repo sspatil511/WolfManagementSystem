@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET /api/projects
+description: Get all projects for the authenticated user's team.
+url: "{{baseUrl}}/api/projects?category=&tag="
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: category
+    value: ""
+    description: Filter by category (optional)
+  - key: tag
+    value: ""
+    description: Filter by tag (optional)
+order: 1000

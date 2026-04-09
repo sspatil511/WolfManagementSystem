@@ -1,0 +1,18 @@
+$kind: http-request
+name: POST /api/projects
+description: Create a new project.
+url: "{{baseUrl}}/api/projects"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "name": "New Project",
+        "description": "Project description",
+        "category": "Development",
+        "tags": ["backend", "api"]
+    }
+order: 3000
