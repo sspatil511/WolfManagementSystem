@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,14 +91,16 @@ public class AuthController {
 
     private Authentication authenticate(String username, String password){
 
-        UserDetails userDetails = customUserDetailsImpl.loadUserByUsername(username);
+        UserDetails userDetails;
 
-        if(userDetails == null){
-            throw new BadCredentialsException("Invalid username");
+        try{
+            userDetails = customUserDetailsImpl.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e){
+            throw new BadCredentialsException("Invalid email or password");
         }
 
         if(!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("Invalid email or password");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

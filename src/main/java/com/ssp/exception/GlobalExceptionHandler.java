@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,5 +61,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageResponse> handleGenericException(Exception ex) {
         MessageResponse errorResponse = new MessageResponse("An error occurred: " + ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<MessageResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        return new ResponseEntity<>(
+            new MessageResponse(ex.getMessage()),
+            HttpStatus.UNAUTHORIZED
+        );
     }
 }
