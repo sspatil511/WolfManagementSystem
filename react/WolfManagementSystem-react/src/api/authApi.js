@@ -5,3 +5,9 @@ export const loginUser = (email, password) =>
 
 export const registerUser = (fullName, email, password) =>
   axiosInstance.post("/auth/signup", { fullName, email, password });
+
+export const getCurrentUser = () =>
+    axiosInstance.get("/api/users/profile");
+
+export const getUserProjects = () =>
+    axiosInstance.get("/api/projects");

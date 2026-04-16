@@ -6,14 +6,23 @@ import { SignupPage } from './pages/Auth/SignupPage';
 import { useAuth } from './context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, userLoading } = useAuth();
+
+  if (userLoading) {
+
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <p className='text-sm text-muted-foreground'>Loading...</p>
+      </div>
+    );
+  }
+
   return isLoggedIn ? children : <Navigate to="/login" replace />;
+
 };
 
 
 function App() {
-
-  const { isLoggedIn } = useAuth();
 
   return (
     <BrowserRouter>
