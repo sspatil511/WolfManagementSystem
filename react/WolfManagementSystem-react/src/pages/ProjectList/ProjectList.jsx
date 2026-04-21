@@ -4,16 +4,21 @@ import { Filters } from '@/components/ui/filters';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { useProjects } from '@/context/ProjectContext';
 import { getUserProjects } from '@/api/authApi';
-import { FolderOpen } from 'lucide-react';
+import { FolderOpen, FilterX } from 'lucide-react';
+
+const DEFAULT_FILTERS = { category: 'All', tag: 'All' };
 
 export const ProjectList = () => {
   const { currentUser } = useAuth();
   const { refreshKey } = useProjects();
+
   const [projects, setProjects] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -37,14 +42,57 @@ export const ProjectList = () => {
     fetchProjects();
   }, [refreshKey]);
 
-  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const handleFilterChange = (section, value) => {
+    setFilters((prev) => ({ ...prev, [section]: value }));
+  };
+
+  const clearAllFilters = () => {
+    setFilters(DEFAULT_FILTERS);
+    setSearchQuery('');
+  };
+
+  const hasActiveFilters =
+    (filters.category && filters.category !== 'All') ||
+    (filters.tag && filters.tag !== 'All') ||
+    searchQuery.trim().length > 0;
 
   const filteredProjects = useMemo(() => {
-    if (!normalizedQuery) return projects;
-    return projects.filter((project) =>
-      project.name.toLowerCase().includes(normalizedQuery)
-    );
-  }, [normalizedQuery, projects]);
+    let result = projects;
+
+    // Apply category filter
+    if (filters.category && filters.category !== 'All') {
+      result = result.filter(
+        (project) =>
+          project.category?.toLowerCase() === filters.category.toLowerCase()
+      );
+    }
+
+    // Apply tag filter
+    if (filters.tag && filters.tag !== 'All') {
+      result = result.filter((project) =>
+        project.tags?.some(
+          (tag) => tag.toLowerCase() === filters.tag.toLowerCase()
+        )
+      );
+    }
+
+    // Apply search query
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    if (normalizedQuery) {
+      result = result.filter((project) =>
+        project.name.toLowerCase().includes(normalizedQuery)
+      );
+    }
+
+    return result;
+  }, [projects, filters, searchQuery]);
+
+  const activeFilterSummary = [
+    filters.category !== 'All' && filters.category,
+    filters.tag !== 'All' && filters.tag,
+  ]
+    .filter(Boolean)
+    .join(', ');
 
   return (
     <section className="w-full">
@@ -60,11 +108,18 @@ export const ProjectList = () => {
         </div>
 
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-5">
-          <p className="text-sm text-muted-foreground">
-            {loading
-              ? 'Loading...'
-              : `${filteredProjects.length} project${filteredProjects.length !== 1 ? 's' : ''}`}
-          </p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <p className="text-sm text-muted-foreground">
+              {loading
+                ? 'Loading...'
+                : `${filteredProjects.length} of ${projects.length} project${projects.length !== 1 ? 's' : ''}`}
+            </p>
+            {activeFilterSummary && (
+              <Badge variant="secondary" className="text-xs">
+                {activeFilterSummary}
+              </Badge>
+            )}
+          </div>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:items-center">
             <div className="relative w-full md:w-[320px]">
@@ -77,7 +132,7 @@ export const ProjectList = () => {
                 className="pl-9"
               />
             </div>
-            <Filters />
+            <Filters filters={filters} onFilterChange={handleFilterChange} />
           </div>
         </div>
 
@@ -105,11 +160,19 @@ export const ProjectList = () => {
           </div>
 
         ) : filteredProjects.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-dashed p-8 text-center">
-            <h2 className="text-base font-medium">No matching projects</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Try a different search term.
-            </p>
+          <div className="mt-8 rounded-xl border border-dashed p-10 text-center flex flex-col items-center gap-4">
+            <FilterX className="h-10 w-10 text-muted-foreground/50" />
+            <div>
+              <h2 className="text-base font-medium">No projects match your filters</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {activeFilterSummary
+                  ? `No projects found for "${activeFilterSummary}"${searchQuery ? ` matching "${searchQuery}"` : ''}.`
+                  : `No projects match "${searchQuery}".`}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={clearAllFilters}>
+              Clear all filters
+            </Button>
           </div>
 
         ) : (
@@ -117,9 +180,16 @@ export const ProjectList = () => {
             {filteredProjects.map((project) => (
               <Card key={project.id} className="transition-shadow hover:shadow-md">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base leading-6">
-                    {project.name}
-                  </CardTitle>
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-base leading-6">
+                      {project.name}
+                    </CardTitle>
+                    {project.category && (
+                      <Badge variant="outline" className="text-xs shrink-0">
+                        {project.category}
+                      </Badge>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground line-clamp-3">
@@ -127,7 +197,7 @@ export const ProjectList = () => {
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {project.tags?.map((tag) => (
-                      <Badge key={`${project.id}-${tag}`} variant="outline">
+                      <Badge key={`${project.id}-${tag}`} variant="secondary">
                         {tag}
                       </Badge>
                     ))}
