@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Filters } from '@/components/ui/filters';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
@@ -13,6 +14,7 @@ import { FolderOpen, FilterX } from 'lucide-react';
 const DEFAULT_FILTERS = { category: 'All', tag: 'All' };
 
 export const ProjectList = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { refreshKey } = useProjects();
 
@@ -59,7 +61,6 @@ export const ProjectList = () => {
   const filteredProjects = useMemo(() => {
     let result = projects;
 
-    // Apply category filter
     if (filters.category && filters.category !== 'All') {
       result = result.filter(
         (project) =>
@@ -67,7 +68,6 @@ export const ProjectList = () => {
       );
     }
 
-    // Apply tag filter
     if (filters.tag && filters.tag !== 'All') {
       result = result.filter((project) =>
         project.tags?.some(
@@ -76,7 +76,6 @@ export const ProjectList = () => {
       );
     }
 
-    // Apply search query
     const normalizedQuery = searchQuery.trim().toLowerCase();
     if (normalizedQuery) {
       result = result.filter((project) =>
@@ -178,7 +177,11 @@ export const ProjectList = () => {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProjects.map((project) => (
-              <Card key={project.id} className="transition-shadow hover:shadow-md">
+              <Card
+                key={project.id}
+                className="transition-shadow hover:shadow-md cursor-pointer"
+                onClick={() => navigate(`/projects/${project.id}`)}
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="text-base leading-6">

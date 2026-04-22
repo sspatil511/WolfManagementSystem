@@ -3,6 +3,7 @@ import { Navbar } from './components/ui/navbar';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from './pages/Auth/LoginPage';
 import { SignupPage } from './pages/Auth/SignupPage';
+import { ProjectDetailPage } from './pages/ProjectDetail/ProjectDetailPage';
 import { useAuth } from './context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
@@ -33,10 +34,22 @@ function App() {
           path="/*"
           element={
             <ProtectedRoute>
-              <Navbar />
               <Routes>
-                <Route path="/" element={<Home />} />
+                {/* Routes WITH Navbar */}
+                <Route
+                  path="/"
+                  element={
+                    <>
+                      <Navbar />
+                      <Home />
+                    </>
+                  }
+                />
+ 
+                {/* Project detail – full-screen, no shared Navbar */}
+                <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
               </Routes>
+
             </ProtectedRoute>
           }
         />
