@@ -12,5 +12,11 @@ export const getCurrentUser = () =>
 export const getUserProjects = () =>
     axiosInstance.get("/api/projects");
 
+export const getProjectDetails = (projectId) =>
+    axiosInstance.get(`/api/projects/${projectId}`);
+
 export const createProject = (projectData) =>
     axiosInstance.post("/api/projects", projectData);
+
+export const inviteToProject = (projectId, email) =>
+    axiosInstance.post("/api/projects/invite", { projectId, email });
